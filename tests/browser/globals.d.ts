@@ -1,5 +1,6 @@
 import type {RequestListener} from 'http';
 import type {Page, WaitForOptions} from 'puppeteer-core';
+import type {ExtensionData, UserSettings} from '../../src/definitions';
 
 type PathsObject = {[path: string]: string | RequestListener | PathsObject};
 
@@ -10,6 +11,13 @@ declare global {
     const popupUtils: {
         click: (selector: string) => Promise<void>;
         exists: (selector: string) => Promise<boolean>;
-        getBoundingRect: (selector: string) => Promise<{left: number; top: number; width: number; height: number}>;
+    };
+    const devtoolsUtils: {
+        paste: (fixes: string) => Promise<void>;
+        reset: () => Promise<void>;
+    };
+    const backgroundUtils: {
+        changeSettings: (settings: Partial<UserSettings>) => Promise<void>;
+        collectData: () => Promise<ExtensionData>;
     };
 }

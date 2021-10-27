@@ -19,6 +19,7 @@ class LocalStorageWrapper implements DevToolsStorage {
             return null;
         }
     }
+
     set(key: string, value: string) {
         try {
             localStorage.setItem(key, value);
@@ -26,6 +27,7 @@ class LocalStorageWrapper implements DevToolsStorage {
             console.error(err);
         }
     }
+
     remove(key: string) {
         try {
             localStorage.removeItem(key);
@@ -33,6 +35,7 @@ class LocalStorageWrapper implements DevToolsStorage {
             console.error(err);
         }
     }
+
     has(key: string) {
         try {
             return localStorage.getItem(key) != null;
@@ -49,12 +52,15 @@ class TempStorage implements DevToolsStorage {
     get(key: string) {
         return this.map.get(key);
     }
+
     set(key: string, value: string) {
         this.map.set(key, value);
     }
+
     remove(key: string) {
         this.map.delete(key);
     }
+
     has(key: string) {
         return this.map.has(key);
     }
@@ -94,7 +100,7 @@ export default class DevTools {
 
     getDynamicThemeFixesText() {
         const $fixes = this.getSavedDynamicThemeFixes();
-        const fixes = $fixes ? parseDynamicThemeFixes($fixes) : this.config.DYNAMIC_THEME_FIXES;
+        const fixes = $fixes ? parseDynamicThemeFixes($fixes) : parseDynamicThemeFixes(this.config.DYNAMIC_THEME_FIXES_RAW);
         return formatDynamicThemeFixes(fixes);
     }
 
@@ -132,7 +138,7 @@ export default class DevTools {
 
     getInversionFixesText() {
         const $fixes = this.getSavedInversionFixes();
-        const fixes = $fixes ? parseInversionFixes($fixes) : this.config.INVERSION_FIXES;
+        const fixes = $fixes ? parseInversionFixes($fixes) : parseInversionFixes(this.config.INVERSION_FIXES_RAW);
         return formatInversionFixes(fixes);
     }
 
@@ -170,7 +176,7 @@ export default class DevTools {
 
     getStaticThemesText() {
         const $themes = this.getSavedStaticThemes();
-        const themes = $themes ? parseStaticThemes($themes) : this.config.STATIC_THEMES;
+        const themes = $themes ? parseStaticThemes($themes) : parseStaticThemes(this.config.STATIC_THEMES_RAW);
         return formatStaticThemes(themes);
     }
 
