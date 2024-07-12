@@ -162,7 +162,7 @@ export default class Messenger {
 
     reportChanges(data: ExtensionData) {
         if (this.changeListenerCount > 0) {
-            chrome.runtime.sendMessage<Message>({
+            chrome.runtime.sendMessage({
                 type: MessageType.BG_CHANGES,
                 data
             });

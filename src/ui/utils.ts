@@ -44,7 +44,7 @@ export function saveFile(name: string, content: string) {
         a.download = name;
         a.click();
     } else {
-        chrome.runtime.sendMessage<Message>({type: MessageType.UI_SAVE_FILE, data: {name, content}});
+        chrome.runtime.sendMessage({type: MessageType.UI_SAVE_FILE, data: {name, content}});
     }
 }
 

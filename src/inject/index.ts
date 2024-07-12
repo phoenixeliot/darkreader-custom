@@ -33,7 +33,7 @@ function sendMessage(message: Message) {
         return;
     }
     try {
-        chrome.runtime.sendMessage<Message>(message, (response) => {
+        chrome.runtime.sendMessage(message, (response) => {
             // Vivaldi bug workaround. See TabManager for details.
             if (response === 'unsupportedSender') {
                 removeStyle();
