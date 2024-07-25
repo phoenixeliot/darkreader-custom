@@ -55,6 +55,16 @@ function sendMessage(message: Message) {
 
 function onMessage({type, data}: Message) {
     logInfo('onMessage', type, data);
+    // Ignore Brave speed reader previews, which are already dark mode for me.
+    // TODO: Make it detect `data-theme="dark"` in the update subscriber, but eh, doesn't affect me.
+    if (document.querySelector('#brave_speedreader_style')) {
+        console.log("Dark Reader: Ignoring Brave speedreader page")
+        // These parts don't seem to be actually necessary for it to work, but leaving them in for consistency
+        removeDynamicTheme()
+        removeStyle()
+        removeSVGFilter()
+        return // Prevent adding styles
+    }
     switch (type) {
         case MessageType.BG_ADD_CSS_FILTER:
         case MessageType.BG_ADD_STATIC_THEME: {
