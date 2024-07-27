@@ -47,18 +47,18 @@ if (WATCH) {
             }
             switch (message.type) {
                 case 'reload:css': {
-                    chrome.runtime.sendMessage<Message>({type: MessageType.BG_CSS_UPDATE});
+                    chrome.runtime.sendMessage({type: MessageType.BG_CSS_UPDATE});
                     break;
                 }
                 case 'reload:ui': {
-                    chrome.runtime.sendMessage<Message>({type: MessageType.BG_UI_UPDATE});
+                    chrome.runtime.sendMessage({type: MessageType.BG_UI_UPDATE});
                     break;
                 }
                 case 'reload:full': {
                     chrome.tabs.query({}, (tabs) => {
                         for (const tab of tabs) {
                             if (canInjectScript(tab.url)) {
-                                chrome.tabs.sendMessage<Message>(tab.id, {type: MessageType.BG_RELOAD});
+                                chrome.tabs.sendMessage(tab.id, {type: MessageType.BG_RELOAD});
                             }
                         }
                         chrome.runtime.reload();

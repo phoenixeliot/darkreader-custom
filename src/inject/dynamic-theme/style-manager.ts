@@ -385,6 +385,9 @@ export function manageStyle(element: StyleElement, {update, loadingStart, loadin
             }
             return [element.sheet.cssRules, null];
         } catch (err) {
+            if (err.name === 'SecurityError') {
+                return [null, null];
+            } // Ignore CORS errors
             return [null, err];
         }
     }

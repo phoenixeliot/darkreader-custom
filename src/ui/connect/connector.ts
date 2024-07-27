@@ -11,7 +11,7 @@ export default class Connector implements ExtensionActions {
 
     private async sendRequest<T>(type: string, data?: string) {
         return new Promise<T>((resolve, reject) => {
-            chrome.runtime.sendMessage<Message>({type, data}, ({data, error}: Message) => {
+            chrome.runtime.sendMessage({type, data}, ({data, error}: Message) => {
                 if (error) {
                     reject(error);
                 } else {
@@ -61,32 +61,32 @@ export default class Connector implements ExtensionActions {
         this.changeSubscribers.add(callback);
         if (this.changeSubscribers.size === 1) {
             chrome.runtime.onMessage.addListener(this.onChangesReceived);
-            chrome.runtime.sendMessage<Message>({type: MessageType.UI_SUBSCRIBE_TO_CHANGES});
+            chrome.runtime.sendMessage({type: MessageType.UI_SUBSCRIBE_TO_CHANGES});
         }
     }
 
     setShortcut(command: string, shortcut: string) {
-        chrome.runtime.sendMessage<Message>({type: MessageType.UI_SET_SHORTCUT, data: {command, shortcut}});
+        chrome.runtime.sendMessage({type: MessageType.UI_SET_SHORTCUT, data: {command, shortcut}});
     }
 
     changeSettings(settings: Partial<UserSettings>) {
-        chrome.runtime.sendMessage<Message>({type: MessageType.UI_CHANGE_SETTINGS, data: settings});
+        chrome.runtime.sendMessage({type: MessageType.UI_CHANGE_SETTINGS, data: settings});
     }
 
     setTheme(theme: Partial<FilterConfig>) {
-        chrome.runtime.sendMessage<Message>({type: MessageType.UI_SET_THEME, data: theme});
+        chrome.runtime.sendMessage({type: MessageType.UI_SET_THEME, data: theme});
     }
 
     toggleURL(url: string) {
-        chrome.runtime.sendMessage<Message>({type: MessageType.UI_TOGGLE_URL, data: url});
+        chrome.runtime.sendMessage({type: MessageType.UI_TOGGLE_URL, data: url});
     }
 
     markNewsAsRead(ids: string[]) {
-        chrome.runtime.sendMessage<Message>({type: MessageType.UI_MARK_NEWS_AS_READ, data: ids});
+        chrome.runtime.sendMessage({type: MessageType.UI_MARK_NEWS_AS_READ, data: ids});
     }
 
     loadConfig(options: {local: boolean}) {
-        chrome.runtime.sendMessage<Message>({type: MessageType.UI_LOAD_CONFIG, data: options});
+        chrome.runtime.sendMessage({type: MessageType.UI_LOAD_CONFIG, data: options});
     }
 
     async applyDevDynamicThemeFixes(text: string) {
@@ -97,7 +97,7 @@ export default class Connector implements ExtensionActions {
     }
 
     resetDevDynamicThemeFixes() {
-        chrome.runtime.sendMessage<Message>({type: MessageType.UI_RESET_DEV_DYNAMIC_THEME_FIXES});
+        chrome.runtime.sendMessage({type: MessageType.UI_RESET_DEV_DYNAMIC_THEME_FIXES});
     }
 
     async applyDevInversionFixes(text: string) {
@@ -108,7 +108,7 @@ export default class Connector implements ExtensionActions {
     }
 
     resetDevInversionFixes() {
-        chrome.runtime.sendMessage<Message>({type: MessageType.UI_RESET_DEV_INVERSION_FIXES});
+        chrome.runtime.sendMessage({type: MessageType.UI_RESET_DEV_INVERSION_FIXES});
     }
 
     async applyDevStaticThemes(text: string) {
@@ -119,14 +119,14 @@ export default class Connector implements ExtensionActions {
     }
 
     resetDevStaticThemes() {
-        chrome.runtime.sendMessage<Message>({type: MessageType.UI_RESET_DEV_STATIC_THEMES});
+        chrome.runtime.sendMessage({type: MessageType.UI_RESET_DEV_STATIC_THEMES});
     }
 
     disconnect() {
         if (this.changeSubscribers.size > 0) {
             this.changeSubscribers.clear();
             chrome.runtime.onMessage.removeListener(this.onChangesReceived);
-            chrome.runtime.sendMessage<Message>({type: MessageType.UI_UNSUBSCRIBE_FROM_CHANGES});
+            chrome.runtime.sendMessage({type: MessageType.UI_UNSUBSCRIBE_FROM_CHANGES});
         }
     }
 }

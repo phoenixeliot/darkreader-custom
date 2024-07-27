@@ -84,9 +84,9 @@ export default class TabManager {
                     const reply = (options: ConnectionMessageOptions) => {
                         const message = getConnectionMessage(options);
                         if (message instanceof Promise) {
-                            message.then((asyncMessage) => asyncMessage && chrome.tabs.sendMessage<Message>(sender.tab.id, asyncMessage, {frameId: sender.frameId}));
+                            message.then((asyncMessage) => asyncMessage && chrome.tabs.sendMessage(sender.tab.id, asyncMessage, {frameId: sender.frameId}));
                         } else if (message) {
-                            chrome.tabs.sendMessage<Message>(sender.tab.id, message, {frameId: sender.frameId});
+                            chrome.tabs.sendMessage(sender.tab.id, message, {frameId: sender.frameId});
                         }
                     };
 
@@ -99,7 +99,7 @@ export default class TabManager {
                         // but it is not possible to handle messaging correctly (no tab ID, frame ID).
                         if (isFirefox) {
                             if (sender && sender.tab && typeof sender.tab.id === 'number') {
-                                chrome.tabs.sendMessage<Message>(sender.tab.id,
+                                chrome.tabs.sendMessage(sender.tab.id,
                                     {
                                         type: MessageType.BG_UNSUPPORTED_SENDER
                                     },
@@ -163,7 +163,7 @@ export default class TabManager {
                     const frameURL = sender.url;
                     if (this.tabs[tabId][frameId].timestamp < this.timestamp) {
                         const message = this.getTabMessage(this.getTabURL(sender.tab), frameURL);
-                        chrome.tabs.sendMessage<Message>(tabId, message, {frameId});
+                        chrome.tabs.sendMessage(tabId, message, {frameId});
                     }
                     this.tabs[sender.tab.id][sender.frameId] = {
                         url: sender.url,
@@ -178,7 +178,7 @@ export default class TabManager {
                     // Using custom response due to Chrome and Firefox incompatibility
                     // Sometimes fetch error behaves like synchronous and sends `undefined`
                     const id = message.id;
-                    const sendResponse = (response: Partial<Message>) => chrome.tabs.sendMessage<Message>(sender.tab.id, {type: MessageType.BG_FETCH_RESPONSE, id, ...response});
+                    const sendResponse = (response: Partial<Message>) => chrome.tabs.sendMessage(sender.tab.id, {type: MessageType.BG_FETCH_RESPONSE, id, ...response});
                     if (isThunderbird) {
                         // In thunderbird some CSS is loaded on a chrome:// URL.
                         // Thunderbird restricted Add-ons to load those URL's.
@@ -216,7 +216,7 @@ export default class TabManager {
 
                 case MessageType.UI_REQUEST_EXPORT_CSS: {
                     const activeTab = await this.getActiveTab();
-                    chrome.tabs.sendMessage<Message>(activeTab.id, {type: MessageType.BG_EXPORT_CSS}, {frameId: 0});
+                    chrome.tabs.sendMessage(activeTab.id, {type: MessageType.BG_EXPORT_CSS}, {frameId: 0});
                     break;
                 }
             }
@@ -277,9 +277,9 @@ export default class TabManager {
                     .forEach(([, {url}], frameId) => {
                         const message = this.getTabMessage(this.getTabURL(tab), frameId === 0 ? null : url);
                         if (tab.active && frameId === 0) {
-                            chrome.tabs.sendMessage<Message>(tab.id, message, {frameId});
+                            chrome.tabs.sendMessage(tab.id, message, {frameId});
                         } else {
-                            setTimeout(() => chrome.tabs.sendMessage<Message>(tab.id, message, {frameId}));
+                            setTimeout(() => chrome.tabs.sendMessage(tab.id, message, {frameId}));
                         }
                         if (this.tabs[tab.id][frameId]) {
                             this.tabs[tab.id][frameId].timestamp = this.timestamp;
