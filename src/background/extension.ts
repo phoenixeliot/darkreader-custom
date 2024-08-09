@@ -248,7 +248,7 @@ export class Extension {
                 this.setTheme({engine: nextEngine});
             }
             // If they use the per-site shortcut, it changes it for just this site (creating a theme if necessary)
-            if (command === 'switchEngineForCurrentSite') {
+            case 'switchEngineForCurrentSite':
                 console.log('Switch Engine for current site command entered');
                 const currentTabUrl = await this.tabs.getActiveTabURL();
                 const host = getURLHostOrProtocol(currentTabUrl);
@@ -271,10 +271,9 @@ export class Extension {
                 customTheme.theme.engine = nextEngine;
 
                 this.changeSettings({ customThemes });
-                break;
-            }
+            
         }
-    };
+    }
 
     private registerContextMenus() {
         const onCommandToggle = async () => this.onCommand('toggle');
