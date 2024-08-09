@@ -9,6 +9,27 @@ export default class Connector implements ExtensionActions {
         this.changeSubscribers = new Set();
     }
 
+    // This was to fix a weird bug where the data was coming back as JSON split between customTheme_0 and customTheme_1
+    // Unclear if this is necessary to keep.
+    private combineCustomThemesJson(data: any): ExtensionData {
+        if (data.customTheme_0) {
+            let i = 0;
+            let runningDataString = ""
+            while (true) {
+                if (data[`customTheme_${i}`]) {
+                    runningDataString += data[`customTheme_${i}`]
+                } else {
+                    break
+                }
+            }
+            return {
+                ...data,
+                customThemes: JSON.parse(runningDataString)
+            }
+        }
+        return data
+    }
+
     private async sendRequest<T>(type: string, data?: string) {
         return new Promise<T>((resolve, reject) => {
             chrome.runtime.sendMessage({type, data}, ({data, error}: Message) => {
@@ -39,9 +60,9 @@ export default class Connector implements ExtensionActions {
 
     async getData() {
         if (isFirefox) {
-            return await this.firefoxSendRequestWithResponse<ExtensionData>(MessageType.UI_GET_DATA);
+            return this.combineCustomThemesJson(await this.firefoxSendRequestWithResponse<ExtensionData>(MessageType.UI_GET_DATA));
         }
-        return await this.sendRequest<ExtensionData>(MessageType.UI_GET_DATA);
+        return this.combineCustomThemesJson(await this.sendRequest<ExtensionData>(MessageType.UI_GET_DATA));
     }
 
     async getActiveTabInfo() {
