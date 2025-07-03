@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "name": "Dark Reader",
+  "name": "Dark Reader (local)",
   "version": "4.9.39",
   "author": "Alexander Shutau",
   "description": "__MSG_extension_description__",
